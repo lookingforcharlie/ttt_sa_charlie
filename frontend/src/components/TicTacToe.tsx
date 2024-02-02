@@ -120,5 +120,3 @@ export default TicTacToe;
 // onSubmit={joinRoom}
 // when server return that there are two players, and two players' name ( X and O ), start the game, SetIsReady(true)
 // when isReady to true, setJoining(false), the ttt game board shows up
-
-import { Tester } from './Tester';

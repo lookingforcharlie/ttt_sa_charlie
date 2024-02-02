@@ -9,6 +9,8 @@ import mongoConnect from './mongoMemoryServer';
 import scoreboardSchema from './scoreboard.model';
 import { checkGameResult, makeObjectEmpty, nullArray } from './utils';
 
+import handleSaveScoreboard from './controllers/saveScoreboardController';
+
 dotenv.config();
 const port = process.env.PORT || 3001;
 
@@ -154,27 +156,29 @@ app.get('/scoreboard', (req: Request, res: Response) => {
 });
 
 // save scoreboard in in-memory MongoDB
-app.post('/scoreboard', (req: Request, res: Response) => {
-  const { playerName, result } = req.body;
-  try {
-    const scoreboard = new scoreboardSchema({
-      playerName,
-      result,
-    });
+// app.post('/scoreboard', (req: Request, res: Response) => {
+//   const { playerName, result } = req.body;
+//   try {
+//     const scoreboard = new scoreboardSchema({
+//       playerName,
+//       result,
+//     });
 
-    scoreboard
-      .save()
-      .then(() => {
-        return res.json({ message: 'Scoreboard saved successfully' });
-      })
-      .catch((error) => {
-        return res.json({ error });
-      });
-  } catch (error) {
-    logger.error('Invalid Add Request');
-    res.json({ error: 'Invalid Add Request' });
-  }
-});
+//     scoreboard
+//       .save()
+//       .then(() => {
+//         return res.json({ message: 'Scoreboard saved successfully' });
+//       })
+//       .catch((error) => {
+//         return res.json({ error });
+//       });
+//   } catch (error) {
+//     logger.error('Invalid Add Request');
+//     res.json({ error: 'Invalid Add Request' });
+//   }
+// });
+
+app.post('/scoreboard', handleSaveScoreboard);
 
 mongoConnect()
   .then(() => {

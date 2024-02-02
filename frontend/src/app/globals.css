@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add this to your styles */
+.wait-indicator:hover::before {
+  content: 'Wait for your turn';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 16px; /* Adjust the font size as needed */
+  padding: 5px;
+  border-radius: 5px;
+  display: $ {
+    !myturn?'block': 'none';
+  }
+}
+
+/* Additional styling for disabled state */
+.wait-indicator.disabled::before {
+  content: 'Wait for your turn';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  display: block;
+}

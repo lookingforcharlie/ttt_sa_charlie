@@ -20,6 +20,27 @@ interface GameBoardProps {
 type BoardElement = 'X' | 'O' | null;
 type Role = 'X' | 'O' | '';
 
+const saveWinner = async (playerName: string, result: string) => {
+  try {
+    const response = await fetch('http://localhost:3004/scoreboard', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ playerName, result }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data.message); // Assuming the server responds with a message
+    } else {
+      console.error('Error saving scoreboard:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error saving scoreboard:', error);
+  }
+};
+
 const GameBoard = ({
   playerName,
   player1,
@@ -112,6 +133,14 @@ const GameBoard = ({
       setShowModal(true);
     });
   }, [socket]);
+
+  useEffect(() => {
+    if (winner) {
+      console.log('saving', winner);
+      const winnerName = winner;
+      saveWinner(winnerName, 'winner');
+    }
+  }, [winner]);
 
   return (
     <div className='flex flex-col items-center justify-start -mt-12'>
