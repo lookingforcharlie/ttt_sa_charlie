@@ -12,7 +12,7 @@ import { checkGameResult, makeObjectEmpty, nullArray } from './utils';
 import handleSaveScoreboard from './controllers/saveScoreboardController';
 
 dotenv.config();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3003;
 
 export const app = express();
 app.use(express.json());
