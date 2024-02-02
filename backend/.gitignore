@@ -1,0 +1,10 @@
+node_modules
+.env
+
+*.log
+*.gz
+
+# Coveralls
+.nyc_output
+coverage
+
