@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import logger from './logger';
 import { GameMove, JoinInfo, Rooms } from './types';
 import { checkGameResult, makeObjectEmpty, nullArray } from './utils';
 
@@ -42,11 +43,11 @@ let roomId: string = '';
 // and the function will give a socket connection for each of them
 io.on('connection', (socket) => {
   // every instance of connection will have an unique id
-  console.log(`New User connected with ${socket.id}`);
+  logger.info(`New User connected with ${socket.id}`);
 
   // console.log(socket.id);
   socket.on('error', (error: Error) => {
-    console.log(`Socket error: ${error.message}`);
+    logger.error(`Socket error: ${error.message}`);
     // You can handle the error as needed, e.g., disconnect the socket
     // socket.disconnect(true);
   });
@@ -55,7 +56,7 @@ io.on('connection', (socket) => {
 
   // Code for join a room, only users only interact with each when they join the same room
   socket.on('join_room', (data: JoinInfo) => {
-    console.log(`User connection info: ${data}`);
+    logger.info(`User connection info: ${data}`);
 
     roomId = data.roomId;
     const player = data.player;
@@ -66,11 +67,11 @@ io.on('connection', (socket) => {
       rooms[roomId].players = [];
     }
 
-    console.log(`Rooms: ${rooms}, RoomId: ${roomId}`);
+    logger.info(`Rooms: ${rooms}, RoomId: ${roomId}`);
 
     // Add the player to the room
     rooms[roomId].players.push(player);
-    console.log(`Rooms with users: ${rooms}`);
+    logger.info(`Rooms with users: ${rooms}`);
 
     socket.join(roomId);
 
@@ -85,12 +86,12 @@ io.on('connection', (socket) => {
         message: 'Game is on.',
       });
 
-      console.log(`Rooms when start the game: ${rooms}`);
+      logger.info(`Rooms when start the game: ${rooms}`);
     }
   });
 
   socket.on('send_move', (data: GameMove) => {
-    console.log(`Players actions: ${data}`);
+    logger.info(`Players actions: ${data}`);
     // data type: { index: 0, role: 'X', player: 'charlie' }
     gameArray[data.index] = data.role;
 
@@ -100,14 +101,14 @@ io.on('connection', (socket) => {
       role: data.role === 'X' ? 'O' : 'X',
       done: true,
     };
-    console.log(`Server sending out the other players action: ${nextMoveData}`);
+    logger.info(`Server sending out the other players action: ${nextMoveData}`);
 
     // check winner or tie
     const result = checkGameResult(gameArray);
-    console.log(`Game result: ${result}`);
+    logger.info(`Game result: ${result}`);
 
     if (result === 'O' || result === 'X') {
-      console.log(`${result} is the winner!`);
+      logger.info(`${result} is the winner!`);
       // send the msg to everyone except the sender
       nullArray(gameArray);
       io.emit('next_movement', nextMoveData);
@@ -124,13 +125,6 @@ io.on('connection', (socket) => {
 
       io.emit('next_movement', nextMoveData);
     }
-  });
-
-  socket.on('ending_game', (data: number) => {
-    if (data === 1) {
-      makeObjectEmpty(rooms);
-    }
-    // socket.disconnect();
   });
 });
 

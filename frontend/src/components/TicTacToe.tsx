@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import GameBoard from './GameBoard';
+import { Tester } from './Tester';
 
 // socket.on listens for incoming events from the other side (server or client).
 // On the client side, socket.on is used to listen for events emitted by the server.
@@ -28,7 +29,7 @@ const TicTacToe = () => {
   const [inRoom, setInRoom] = useState(false);
 
   // Creating the socket connection between server and client
-  const socket = io('http://localhost:3004', {
+  const socket = io('http://localhost:3001', {
     transports: ['websocket'],
   });
 
@@ -65,18 +66,21 @@ const TicTacToe = () => {
 
   return (
     <div className='flex flex-col items-center space-y-8 w-1/2'>
-      <GameBoard
-        playerName={playerName}
-        roomName={roomName}
-        socket={socket}
-        player1={player1}
-        player2={player2}
-        setInRoom={setInRoom}
-        setPlayerName={setPlayerName}
-        setRoomName={setRoomName}
-        setIndicator={setIndicator}
-      />
-      <h1>------------------- GameBoard ------------------</h1>
+      {inRoom && (
+        <GameBoard
+          playerName={playerName}
+          roomName={roomName}
+          socket={socket}
+          player1={player1}
+          player2={player2}
+          setInRoom={setInRoom}
+          setPlayerName={setPlayerName}
+          setRoomName={setRoomName}
+          setIndicator={setIndicator}
+        />
+      )}
+      {/* <h1>------------------- GameBoard ------------------</h1> */}
+
       <h1 className='text-rose-800 text-center text-xl font-semibold'>
         {indicator}
       </h1>
@@ -84,6 +88,7 @@ const TicTacToe = () => {
         <input
           className='w-full p-2 focus:outline-none border-2 rounded'
           placeholder='Enter your name...'
+          value={playerName}
           onChange={(e) => {
             setPlayerName(e.target.value.trim());
           }}
@@ -101,7 +106,7 @@ const TicTacToe = () => {
           disabled={!roomName.trim() || !playerName.trim()}
           className='w-full h-10 px-2 bg-gray-300 disabled:bg-gray-300 disabled:text-gray-400 hover:bg-gray-400 text-gray-800 rounded-md shadow-md transition-colors duration-200 ease-in-out'
         >
-          Start a New Game
+          {joining ? 'Joining...' : 'Start a New Game'}
         </button>
       </form>
     </div>
