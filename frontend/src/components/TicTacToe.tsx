@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import GameBoard from './GameBoard';
 
 // socket.on listens for incoming events from the other side (server or client).
 // On the client side, socket.on is used to listen for events emitted by the server.
@@ -37,6 +38,11 @@ const TicTacToe = () => {
 
   return (
     <div className='flex flex-col items-center space-y-8 w-1/2'>
+      <GameBoard
+        playerName={playerName}
+        roomName={roomName}
+        setRoomName={setRoomName}
+      />
       <h1>------------------- GameBoard ------------------</h1>
       <h1 className='text-rose-800 text-center text-xl font-semibold'>
         {indicator}

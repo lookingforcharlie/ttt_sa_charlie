@@ -36,6 +36,7 @@ io.on('connection', (socket) => {
 
   socket.on('sending_message', (msg: string) => {
     console.log(msg);
+    io.emit(msg);
     // socket.disconnect();
   });
 });
