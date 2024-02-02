@@ -4,6 +4,8 @@ import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import logger from './logger';
+import mongoConnect from './mongoMemoryServer';
+import scoreboardSchema from './scoreboard.model';
 import { GameMove, JoinInfo, Rooms } from './types';
 import { checkGameResult, makeObjectEmpty, nullArray } from './utils';
 
@@ -128,8 +130,39 @@ io.on('connection', (socket) => {
   });
 });
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hi, I am mocking');
+// get scoreboard info from in-memory MongoDB
+app.get('/scoreboard', (req: Request, res: Response) => {
+  scoreboardSchema
+    .find({})
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((error) => {
+      res.json({ error });
+    });
+});
+
+// save scoreboard in in-memory MongoDB
+app.post('/scoreboard', (req: Request, res: Response) => {
+  const { playerName, result } = req.body;
+  try {
+    const scoreboard = new scoreboardSchema({
+      playerName,
+      result,
+    });
+
+    scoreboard
+      .save()
+      .then(() => {
+        return res.json({ message: 'Scoreboard saved successfully' });
+      })
+      .catch((error) => {
+        return res.json({ error });
+      });
+  } catch (error) {
+    logger.error('Invalid Add Request');
+    res.json({ error: 'Invalid Add Request' });
+  }
 });
 
 app.get('/', (req: Request, res: Response) => {
@@ -137,6 +170,16 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Start ws server
-server.listen(port, () => {
-  console.log(`Socket server is running on http://localhost:${port}`);
-});
+mongoConnect()
+  .then(() => {
+    try {
+      server.listen(port, () => {
+        logger.info(`Socket server is running on http://localhost:${port}`);
+      });
+    } catch (error) {
+      logger.error('Invalid socket connection');
+    }
+  })
+  .catch((error: Error) => {
+    console.log(`Invalid MongoDB connection: ${error.message}`);
+  });

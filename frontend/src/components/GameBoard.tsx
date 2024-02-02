@@ -5,6 +5,9 @@ import React, { useEffect, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
 import trophy from '../app/trophy.png';
 
+type BoardElement = 'X' | 'O' | null;
+type Role = 'X' | 'O' | '';
+
 interface GameBoardProps {
   playerName: string;
   player1: string;
@@ -16,9 +19,6 @@ interface GameBoardProps {
   setRoomName: (value: React.SetStateAction<string>) => void;
   setIndicator: (value: React.SetStateAction<string>) => void;
 }
-
-type BoardElement = 'X' | 'O' | null;
-type Role = 'X' | 'O' | '';
 
 const GameBoard = ({
   playerName,
