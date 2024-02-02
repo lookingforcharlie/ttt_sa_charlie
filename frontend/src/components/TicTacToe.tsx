@@ -1,18 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { GameStartData } from '../type/types';
 import GameBoard from './GameBoard';
-
-// socket.on listens for incoming events from the other side (server or client).
-// On the client side, socket.on is used to listen for events emitted by the server.
-
-type GameStartData = {
-  player1: string;
-  player1Role: 'X' | 'O';
-  player2: string;
-  player2Role: 'X' | 'O';
-  message: string;
-};
 
 const TicTacToe = () => {
   const [playerName, setPlayerName] = useState('');
@@ -49,12 +39,10 @@ const TicTacToe = () => {
     }
     setJoining(true);
     setIndicator('Waiting for another player joining ...');
-    // setPlayerName('');
   };
 
   useEffect(() => {
     socket.on('start_game', (startData: GameStartData) => {
-      console.log(startData);
       setPlayer1(startData.player1);
       setPlayer2(startData.player2);
       setInRoom(true);
@@ -77,7 +65,6 @@ const TicTacToe = () => {
           setIndicator={setIndicator}
         />
       )}
-      {/* <h1>------------------- GameBoard ------------------</h1> */}
 
       {!inRoom && (
         <>
@@ -116,7 +103,3 @@ const TicTacToe = () => {
 };
 
 export default TicTacToe;
-
-// onSubmit={joinRoom}
-// when server return that there are two players, and two players' name ( X and O ), start the game, SetIsReady(true)
-// when isReady to true, setJoining(false), the ttt game board shows up

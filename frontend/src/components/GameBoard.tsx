@@ -4,6 +4,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
 import trophy from '../app/trophy.png';
+import { BoardElement, NextMoveData, Role } from '../type/types';
 
 interface GameBoardProps {
   playerName: string;
@@ -16,9 +17,6 @@ interface GameBoardProps {
   setRoomName: (value: React.SetStateAction<string>) => void;
   setIndicator: (value: React.SetStateAction<string>) => void;
 }
-
-type BoardElement = 'X' | 'O' | null;
-type Role = 'X' | 'O' | '';
 
 const saveWinner = async (playerName: string, result: string) => {
   try {
@@ -54,7 +52,6 @@ const GameBoard = ({
 }: GameBoardProps) => {
   const [board, setBoard] = useState<BoardElement[]>(Array(9).fill(null));
   const [role, setRole] = useState<Role>(playerName === player1 ? 'X' : 'O');
-  // game starts from X player
   const [myTurn, setMyTurn] = useState<boolean>(role === 'X');
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -62,16 +59,6 @@ const GameBoard = ({
   const [winner, setWinner] = useState('');
 
   const handleClick = (index: number) => {
-    console.log(index);
-
-    // setBoard((prev) => {
-    //   const tempBoard = [...prev];
-    //   if (role !== '') {
-    //     tempBoard[index] = role;
-    //   }
-    //   return tempBoard;
-    // });
-
     setMyTurn((prevTurn) => !prevTurn);
 
     socket.emit('send_move', { index, role, player: playerName });
@@ -80,7 +67,6 @@ const GameBoard = ({
   const handlePlayAgain = () => {
     setShowModal(false);
     setWinner('');
-    // socket.emit('play_again', 1); // add 1 , the code start working, so weird why?
   };
 
   const handleLeave = () => {
@@ -93,18 +79,8 @@ const GameBoard = ({
     socket.emit('ending_game', 1);
   };
 
-  type NextMoveData = {
-    movement: BoardElement[];
-    last_player: string;
-    role: 'O' | 'X';
-    done: boolean;
-  };
-
   useEffect(() => {
     socket.on('next_movement', (nextMoveData: NextMoveData) => {
-      console.log(nextMoveData.movement);
-      console.log(nextMoveData.last_player);
-
       if (playerName !== nextMoveData.last_player) {
         setBoard(nextMoveData.movement);
         setRole(nextMoveData.role);
@@ -112,18 +88,12 @@ const GameBoard = ({
       }
       setBoard(nextMoveData.movement);
     });
-
-    // socket.on('new_game', (emptyArray: BoardElement[]) => {
-    //   setBoard(emptyArray);
-    // });
-    // socket.removeAllListeners();
   }, [socket]);
 
   useEffect(() => {
     socket.on('send_result', (data) => {
       // Handle the data received from the backend
       if (data.winner === player1 || data.winner === player2) {
-        console.log(`${data.winner} is the winner!`);
         setModelContent(`${data.winner} is the winner!`);
         setWinner(data.winner);
       } else if (data.winner === 'tied') {
@@ -136,7 +106,6 @@ const GameBoard = ({
 
   useEffect(() => {
     if (winner) {
-      console.log('saving', winner);
       const winnerName = winner;
       saveWinner(winnerName, 'winner');
     }
@@ -212,6 +181,3 @@ const GameBoard = ({
 };
 
 export default GameBoard;
-
-// Play again: setBoard(Array(9).fill(null), socket.emit('reset_game')
-// Leave the room: setInRoom(false), socket.emit('end_game')
