@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import { GameMove, JoinInfo, Rooms } from './types';
+import { checkGameResult, makeObjectEmpty, nullArray } from './utils';
 
 dotenv.config();
 const port = process.env.PORT || 3001;
@@ -21,24 +23,119 @@ const io = new Server(server, {
   },
 });
 
+const gameArray = Array(9).fill(null);
+
+// const rooms: Rooms = {
+//   room1: {
+//     players: ['playerName1', 'playerName2'],
+//   },
+//   room2: {
+//     players: ['playerName3', 'playerName4'],
+//   },
+// };
+const rooms: Rooms = {};
+makeObjectEmpty(rooms);
+
+let roomId: string = '';
+
 // a function that will run every time a client connect to the server
 // and the function will give a socket connection for each of them
 io.on('connection', (socket) => {
   // every instance of connection will have an unique id
   console.log(`New User connected with ${socket.id}`);
 
-  // error handling for io connection
+  // console.log(socket.id);
   socket.on('error', (error: Error) => {
     console.log(`Socket error: ${error.message}`);
     // You can handle the error as needed, e.g., disconnect the socket
     // socket.disconnect(true);
   });
 
-  socket.on('sending_message', (msg: string) => {
-    console.log(msg);
-    io.emit(msg);
+  // console.log(gameArray);
+
+  // Code for join a room, only users only interact with each when they join the same room
+  socket.on('join_room', (data: JoinInfo) => {
+    console.log(`User connection info: ${data}`);
+
+    roomId = data.roomId;
+    const player = data.player;
+
+    if (!rooms[roomId]) {
+      rooms[roomId] = { players: [] };
+    } else if (rooms[roomId].players.length === 2) {
+      rooms[roomId].players = [];
+    }
+
+    console.log(`Rooms: ${rooms}, RoomId: ${roomId}`);
+
+    // Add the player to the room
+    rooms[roomId].players.push(player);
+    console.log(`Rooms with users: ${rooms}`);
+
+    socket.join(roomId);
+
+    // Check if there are exactly two players to start the game
+    if (rooms[roomId].players.length === 2) {
+      // Emit a start game event to all players in the room
+      io.to(roomId).emit('start_game', {
+        player1: rooms[roomId].players[0],
+        player1Role: 'X',
+        player2: rooms[roomId].players[1],
+        player2Role: 'O',
+        message: 'Game is on.',
+      });
+
+      console.log(`Rooms when start the game: ${rooms}`);
+    }
+  });
+
+  socket.on('send_move', (data: GameMove) => {
+    console.log(`Players actions: ${data}`);
+    // data type: { index: 0, role: 'X', player: 'charlie' }
+    gameArray[data.index] = data.role;
+
+    const nextMoveData = {
+      movement: gameArray,
+      last_player: data.player,
+      role: data.role === 'X' ? 'O' : 'X',
+      done: true,
+    };
+    console.log(`Server sending out the other players action: ${nextMoveData}`);
+
+    // check winner or tie
+    const result = checkGameResult(gameArray);
+    console.log(`Game result: ${result}`);
+
+    if (result === 'O' || result === 'X') {
+      console.log(`${result} is the winner!`);
+      // send the msg to everyone except the sender
+      nullArray(gameArray);
+      io.emit('next_movement', nextMoveData);
+
+      // io.emit is server-side method that used to emit an event to all connected clients.
+      io.emit('send_result', { winner: data.player });
+    } else if (result === 'tie') {
+      // still send the move when the game tied
+      io.emit('next_movement', nextMoveData);
+      io.emit('send_result', { winner: 'tied' });
+    } else if (result === null) {
+      // console.log(nextMoveData);
+      // socket.broadcast.emit('next_movement', nextMoveData);
+
+      io.emit('next_movement', nextMoveData);
+    }
+  });
+
+  socket.on('ending_game', (data: number) => {
+    if (data === 1) {
+      makeObjectEmpty(rooms);
+    }
     // socket.disconnect();
   });
+});
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hi, I am mocking');
 });
 
 app.get('/', (req: Request, res: Response) => {
