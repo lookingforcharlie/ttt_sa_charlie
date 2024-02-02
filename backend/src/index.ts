@@ -33,6 +33,11 @@ io.on('connection', (socket) => {
     // You can handle the error as needed, e.g., disconnect the socket
     // socket.disconnect(true);
   });
+
+  socket.on('sending_message', (msg: string) => {
+    console.log(msg);
+    // socket.disconnect();
+  });
 });
 
 app.get('/', (req: Request, res: Response) => {
