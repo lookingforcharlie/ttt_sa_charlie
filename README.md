@@ -2,8 +2,4 @@
 
 ## Backend - Express.JS, TypeScript
 
-- Setup TS
-- Setup Nodemon
-- Setup hello world
-
-## Frontend
+## Frontend - Next.JS, TypeScript, Tailwind CSS
