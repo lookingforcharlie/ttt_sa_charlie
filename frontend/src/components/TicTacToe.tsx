@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import GameBoard from './GameBoard';
-import { Tester } from './Tester';
 
 // socket.on listens for incoming events from the other side (server or client).
 // On the client side, socket.on is used to listen for events emitted by the server.
@@ -23,7 +22,6 @@ const TicTacToe = () => {
   const [indicator, setIndicator] = useState<string>(
     'Create or find a room to play against another player'
   );
-  const [isReady, setIsReady] = useState(false);
 
   const [joining, setJoining] = useState(false);
   const [inRoom, setInRoom] = useState(false);
@@ -81,34 +79,38 @@ const TicTacToe = () => {
       )}
       {/* <h1>------------------- GameBoard ------------------</h1> */}
 
-      <h1 className='text-rose-800 text-center text-xl font-semibold'>
-        {indicator}
-      </h1>
-      <form className='flex flex-col w-full gap-4' onSubmit={joinRoom}>
-        <input
-          className='w-full p-2 focus:outline-none border-2 rounded'
-          placeholder='Enter your name...'
-          value={playerName}
-          onChange={(e) => {
-            setPlayerName(e.target.value.trim());
-          }}
-        />
-        <input
-          className='w-full p-2 focus:outline-none border-2 rounded'
-          placeholder='Enter room name...'
-          value={roomName}
-          onChange={(e) => {
-            setRoomName(e.target.value.trim());
-          }}
-        />
-        <button
-          type='submit'
-          disabled={!roomName.trim() || !playerName.trim()}
-          className='w-full h-10 px-2 bg-gray-300 disabled:bg-gray-300 disabled:text-gray-400 hover:bg-gray-400 text-gray-800 rounded-md shadow-md transition-colors duration-200 ease-in-out'
-        >
-          {joining ? 'Joining...' : 'Start a New Game'}
-        </button>
-      </form>
+      {!inRoom && (
+        <>
+          <h1 className='text-rose-800 text-center text-xl font-semibold'>
+            {indicator}
+          </h1>
+          <form className='flex flex-col w-full gap-4' onSubmit={joinRoom}>
+            <input
+              className='w-full p-2 focus:outline-none border-2 rounded'
+              placeholder='Enter your name...'
+              value={playerName}
+              onChange={(e) => {
+                setPlayerName(e.target.value.trim());
+              }}
+            />
+            <input
+              className='w-full p-2 focus:outline-none border-2 rounded'
+              placeholder='Enter room name...'
+              value={roomName}
+              onChange={(e) => {
+                setRoomName(e.target.value.trim());
+              }}
+            />
+            <button
+              type='submit'
+              disabled={!roomName.trim() || !playerName.trim()}
+              className='w-full h-10 px-2 bg-gray-300 disabled:bg-gray-300 disabled:text-gray-400 hover:bg-gray-400 text-gray-800 rounded-md shadow-md transition-colors duration-200 ease-in-out'
+            >
+              {joining ? 'Joining...' : 'Start a New Game'}
+            </button>
+          </form>
+        </>
+      )}
     </div>
   );
 };
@@ -118,3 +120,5 @@ export default TicTacToe;
 // onSubmit={joinRoom}
 // when server return that there are two players, and two players' name ( X and O ), start the game, SetIsReady(true)
 // when isReady to true, setJoining(false), the ttt game board shows up
+
+import { Tester } from './Tester';

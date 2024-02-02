@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import { GameMove, JoinInfo, Rooms } from '../src/types';
 import logger from './logger';
 import mongoConnect from './mongoMemoryServer';
 import scoreboardSchema from './scoreboard.model';
-import { GameMove, JoinInfo, Rooms } from './types';
 import { checkGameResult, makeObjectEmpty, nullArray } from './utils';
 
 dotenv.config();
@@ -128,6 +128,17 @@ io.on('connection', (socket) => {
       io.emit('next_movement', nextMoveData);
     }
   });
+
+  socket.on('ending_game', (data: number) => {
+    if (data === 1) {
+      makeObjectEmpty(rooms);
+    }
+    // socket.disconnect();
+  });
+});
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hi, I am mocking');
 });
 
 // get scoreboard info from in-memory MongoDB
@@ -165,11 +176,6 @@ app.post('/scoreboard', (req: Request, res: Response) => {
   }
 });
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, I am the Server');
-});
-
-// Start ws server
 mongoConnect()
   .then(() => {
     try {
@@ -183,3 +189,5 @@ mongoConnect()
   .catch((error: Error) => {
     console.log(`Invalid MongoDB connection: ${error.message}`);
   });
+
+// Start the server
