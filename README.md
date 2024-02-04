@@ -2,7 +2,7 @@
 
 Experience a classic joy of childhood gaming built with Next.js, Express.js, and TypeScript. Enjoy seamless real-time multiplayer interactions via WebSocket, with live scoreboard updates using an in-memory MongoDB server.
 
-![game screenshot](./frontend/src/app/ttt_ss.png 'game screenshot')
+![game screenshot](./frontend/src/app/assets/ttt_ss.png 'game screenshot')
 
 ## Application Stack
 
@@ -98,4 +98,4 @@ Experience a classic joy of childhood gaming built with Next.js, Express.js, and
 
 ## System Design Diagram
 
-![design diagram](./frontend/src/app/ttt_diagram_md.png 'design diagram')
+![design diagram](./frontend/src/app/assets/ttt_diagram_md.png 'design diagram')
