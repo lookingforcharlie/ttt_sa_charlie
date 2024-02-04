@@ -3,8 +3,15 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
-import trophy from '../app/trophy.png';
+import trophy from '../app/assets/trophy.png';
 import { BoardElement, NextMoveData, Role } from '../type/types';
+import { BASEURL } from './TicTacToe';
+
+import {
+  useMoveEffect,
+  useResultEffect,
+  useSaveWinnerEffect,
+} from '../hooks/customGameHooks';
 
 interface GameBoardProps {
   playerName: string;
@@ -20,7 +27,7 @@ interface GameBoardProps {
 
 const saveWinner = async (playerName: string, result: string) => {
   try {
-    const response = await fetch('http://localhost:3003/scoreboard', {
+    const response = await fetch(`${BASEURL}/scoreboard`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,37 +86,17 @@ const GameBoard = ({
     socket.emit('ending_game', 1);
   };
 
-  useEffect(() => {
-    socket.on('next_movement', (nextMoveData: NextMoveData) => {
-      if (playerName !== nextMoveData.last_player) {
-        setBoard(nextMoveData.movement);
-        setRole(nextMoveData.role);
-        setMyTurn(nextMoveData.done);
-      }
-      setBoard(nextMoveData.movement);
-    });
-  }, [socket]);
+  useMoveEffect(socket, playerName, setBoard, setRole, setMyTurn);
+  useResultEffect(
+    socket,
+    player1,
+    player2,
+    setModelContent,
+    setWinner,
+    setShowModal
+  );
 
-  useEffect(() => {
-    socket.on('send_result', (data) => {
-      // Handle the data received from the backend
-      if (data.winner === player1 || data.winner === player2) {
-        setModelContent(`${data.winner} is the winner!`);
-        setWinner(data.winner);
-      } else if (data.winner === 'tied') {
-        setModelContent(`The game ${data.winner}.`);
-      }
-
-      setShowModal(true);
-    });
-  }, [socket]);
-
-  useEffect(() => {
-    if (winner) {
-      const winnerName = winner;
-      saveWinner(winnerName, 'winner');
-    }
-  }, [winner]);
+  useSaveWinnerEffect(winner, saveWinner);
 
   return (
     <div className='flex flex-col items-center justify-start -mt-12'>

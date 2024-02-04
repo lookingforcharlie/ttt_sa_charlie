@@ -51,5 +51,5 @@ mongoConnect()
     }
   })
   .catch((error: Error) => {
-    console.log(`Invalid MongoDB connection: ${error.message}`);
+    logger.error(`Invalid MongoDB connection: ${error.message}`);
   });

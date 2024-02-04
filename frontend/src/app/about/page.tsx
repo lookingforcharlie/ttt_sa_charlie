@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import diagram from '../ttt_diagram.png';
+import diagram from '../assets/ttt_diagram.png';
 
 export default function About() {
   return (

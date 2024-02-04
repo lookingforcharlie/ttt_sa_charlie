@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import ttt_icon from '../app/ttt_icon.png';
+import ttt_icon from '../app/assets/ttt_icon.png';
 
 export default function Header() {
   return (

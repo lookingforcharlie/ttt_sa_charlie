@@ -4,6 +4,8 @@ import { io } from 'socket.io-client';
 import { GameStartData } from '../type/types';
 import GameBoard from './GameBoard';
 
+export const BASEURL = 'http://localhost:3003';
+
 const TicTacToe = () => {
   const [playerName, setPlayerName] = useState('');
   const [player1, setPlayer1] = useState('');
@@ -17,7 +19,7 @@ const TicTacToe = () => {
   const [inRoom, setInRoom] = useState(false);
 
   // Creating the socket connection between server and client
-  const socket = io('http://localhost:3003', {
+  const socket = io(BASEURL, {
     transports: ['websocket'],
   });
 

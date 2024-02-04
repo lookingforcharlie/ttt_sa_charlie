@@ -1,4 +1,6 @@
 import { unstable_noStore as noStore } from 'next/cache';
+import Image from 'next/image';
+import trophy from '../assets/trophy.png';
 
 type WinnerData = {
   _id: string;
@@ -27,6 +29,8 @@ export default async function Winner() {
         <table className='min-w-full divide-y divide-gray-200 text-lime-800'>
           <thead>
             <tr>
+              <th className='py-2'>Trophy</th>
+
               <th className='py-2'>Player Name</th>
               <th className='py-2'>Result</th>
               <th className='py-2'>Time</th>
@@ -37,6 +41,14 @@ export default async function Winner() {
               (item, index) =>
                 index % 2 !== 0 && (
                   <tr key={item._id}>
+                    <td className='py-2 pl-4 text-center'>
+                      <Image
+                        src={trophy}
+                        alt='tic tac toe diagram'
+                        width={50}
+                        className='pl-4'
+                      />
+                    </td>
                     <td className='py-2 text-center'>{item.playerName}</td>
                     <td className='py-2 text-center'>{item.result}</td>
                     <td className='py-2 text-center'>

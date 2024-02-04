@@ -12,7 +12,7 @@ async function mongoConnect() {
   });
 
   logger.info(`MongoDB successfully connected to URI: ${mongoUri}`);
-  console.log(`MongoDB successfully connected to ${mongoUri}`);
+  logger.info(`MongoDB successfully connected to ${mongoUri}`);
 }
 
 export default mongoConnect;
