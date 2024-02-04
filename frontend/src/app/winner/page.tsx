@@ -9,7 +9,7 @@ type WinnerData = {
 };
 
 async function getWinnerBoard() {
-  const res = await fetch(`http://localhost:3004/scoreboard`, {
+  const res = await fetch(`http://localhost:3003/scoreboard`, {
     cache: 'no-store',
   });
   return res.json();

@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
 });
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hi, I am mocking');
+  res.send('Hi, I am socket.');
 });
 
 // get scoreboard info from in-memory MongoDB

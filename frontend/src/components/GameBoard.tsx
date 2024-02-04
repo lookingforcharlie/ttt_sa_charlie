@@ -20,7 +20,7 @@ interface GameBoardProps {
 
 const saveWinner = async (playerName: string, result: string) => {
   try {
-    const response = await fetch('http://localhost:3004/scoreboard', {
+    const response = await fetch('http://localhost:3003/scoreboard', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ const GameBoard = ({
       <div className='flex flex-col items-center justify-center gap-4'>
         <div className='text-center'>
           <div className='text-lg font-semibold'>
-            Game in on in Room: {roomName}
+            The game is on in Room: {roomName}
           </div>
           <div>Who starts the game is decided randomly.</div>
         </div>

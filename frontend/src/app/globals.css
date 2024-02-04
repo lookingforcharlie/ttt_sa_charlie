@@ -14,9 +14,7 @@
   font-size: 16px; /* Adjust the font size as needed */
   padding: 5px;
   border-radius: 5px;
-  display: $ {
-    !myturn?'block': 'none';
-  }
+  display: block;
 }
 
 /* Additional styling for disabled state */

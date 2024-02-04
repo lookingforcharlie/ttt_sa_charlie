@@ -17,7 +17,7 @@ const TicTacToe = () => {
   const [inRoom, setInRoom] = useState(false);
 
   // Creating the socket connection between server and client
-  const socket = io('http://localhost:3001', {
+  const socket = io('http://localhost:3003', {
     transports: ['websocket'],
   });
 
