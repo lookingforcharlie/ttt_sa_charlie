@@ -19,6 +19,7 @@ Experience a classic joy of childhood gaming built with Next.js, Express.js, and
   - [ **Socket.io** ] - A library for creating low-latency, high-throughput bi-directional WebSocket connections, enhancing players' gaming experiences with extraordinary real-time communication
   - [ **MongoDB Server in Memory** ] - Business Requirement, also really easy to setup
   - [ **RESTFul API** ] - Opting for a RESTful API to bridge the gap between the frontend and the database is logical, as it as it doesn't require a real-time connection
+  - [ **Winston** ] - Powerful logger framework widely used in Node.JS environment
 
 ## Testing - Jest for both FE and BE
 
