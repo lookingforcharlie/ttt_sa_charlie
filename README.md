@@ -1,6 +1,8 @@
 # Tia Tac Toe Real-time Gaming App
 
-Experience a classic joy of childhood gaming built with Next.js, Express.js, and TypeScript. Enjoy seamless real-time multiplayer interactions via WebSocket, with live scoreboard updates using an in-memory MongoDB server.
+Experience a classic joy of childhood gaming built with Next.js, Express.js, and TypeScript.  
+Two players can connect to the same server from its own frontend or instance to enjoy seamless real-time multiplayer interactions via WebSocket.  
+Live scoreboard updates using an in-memory MongoDB server.
 
 ![game screenshot](./frontend/src/app/assets/ttt_ss.png 'game screenshot')
 
@@ -67,6 +69,7 @@ Experience a classic joy of childhood gaming built with Next.js, Express.js, and
 
 - Unzip the downloaded zip file, and move it to your preferable place
 - Start the backend server
+- Open CMD or terminal
 
   ```
   $ cd [project folder]
@@ -79,7 +82,8 @@ Experience a classic joy of childhood gaming built with Next.js, Express.js, and
 
   > <span style="font-size: 1.5rem;">Backend will be hosted on port 3003, please make port 3003 available</span>
 
-- cd into backend folder, run 'npm install', run 'npm run game' to start the backend.
+- Launch the frontend
+- Open another CMD or terminal
 
   ```
   $ cd [project folder]
