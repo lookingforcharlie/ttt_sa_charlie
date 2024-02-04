@@ -9,6 +9,7 @@ import mongoConnect from './mongoMemoryServer';
 import scoreboardSchema from './scoreboard.model';
 import { checkGameResult, makeObjectEmpty, nullArray } from './utils';
 
+import handleGetScoreboard from './controllers/getScoreboardController';
 import handleSaveScoreboard from './controllers/saveScoreboardController';
 
 dotenv.config();
@@ -121,16 +122,18 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // get scoreboard info from in-memory MongoDB
-app.get('/scoreboard', (req: Request, res: Response) => {
-  scoreboardSchema
-    .find({})
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((error) => {
-      res.json({ error });
-    });
-});
+// app.get('/scoreboard', (req: Request, res: Response) => {
+//   scoreboardSchema
+//     .find({})
+//     .then((data) => {
+//       res.json(data);
+//     })
+//     .catch((error) => {
+//       res.json({ error });
+//     });
+// });
+
+app.get('/scoreboard', handleGetScoreboard);
 
 app.post('/scoreboard', handleSaveScoreboard);
 

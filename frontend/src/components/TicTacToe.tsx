@@ -24,12 +24,12 @@ const TicTacToe = () => {
   // confirm the socket connection from the client side
   // 'connect' is the reserved variable of event name for check the connection
   socket.on('connect', () => {
-    console.log(`You connected with id: ${socket.id}`);
+    console.log(`FE - You connected with id: ${socket.id}`);
   });
 
   // handle error msg
   socket.on('connect_error', (err) => {
-    console.log(`connect_error due to ${err.message}`);
+    console.log(`FE - connect_error due to ${err.message}`);
   });
 
   const joinRoom = (e: React.FormEvent) => {

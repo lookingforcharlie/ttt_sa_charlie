@@ -58,7 +58,7 @@ Experience a classic joy of childhood gaming built with Next.js, Express.js, and
 
 ## How to run the game
 
-- Down the repo zip file locally
+- Download the repo zip file locally
 
   ```
   https://github.com/lookingforcharlie/ttt_sa_charlie/archive/refs/heads/main.zip
@@ -94,3 +94,7 @@ Experience a classic joy of childhood gaming built with Next.js, Express.js, and
 - Input different player name and same room name respectively
 
 <span style="font-size: 2em; font-weight: bold;">Gaming Time!</span>
+
+## System Design Diagram
+
+![design diagram](./frontend/src/app/ttt_diagram_md.png 'design diagram')
