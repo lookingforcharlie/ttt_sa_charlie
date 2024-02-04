@@ -64,6 +64,7 @@ Experience a classic joy of childhood gaming built with Next.js, Express.js, and
   https://github.com/lookingforcharlie/ttt_sa_charlie/archive/refs/heads/main.zip
   ```
 
+- Unzip the downloaded zip file, and move it to your preferable place
 - Start the backend server
 
   ```
